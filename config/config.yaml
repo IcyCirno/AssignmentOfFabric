@@ -1,0 +1,20 @@
+mode:
+  develop: true
+
+db:
+  dsn: root:123321@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=True&loc=Local
+  maxIdleConns: 10 #最多空闲连接数
+  maxOpenConns: 10 #最多打开连接数
+
+redis:
+  url: localhost:6379
+
+server:
+  port: :8080
+
+jwt:
+  tokenExpire: 30 #token时长
+  signingKey: nftcard
+
+nft:
+  initasset: 20
