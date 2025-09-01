@@ -18,11 +18,7 @@ func Login(c *gin.Context) {
 	var iUser userLogin
 
 	if err := c.ShouldBindJSON(&iUser); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": err.Error(),
-			"msg":   "JSON解析失败，请核对填写信息",
-		})
+		utils.Fail(c, http.StatusBadRequest, err.Error(), "JSON解析失败，请核对填写信息", nil)
 		return
 	}
 
@@ -30,40 +26,23 @@ func Login(c *gin.Context) {
 	err := global.DB.Model(&model.User{}).Where("email = ?", iUser.Email).Find(&user).Error
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": err.Error(),
-			"msg":   "邮箱未注册!",
-		})
+		utils.Fail(c, http.StatusBadRequest, err.Error(), "邮箱未注册", nil)
 		return
 	}
 
 	if !utils.CompareHashAndPassword(user.Password, iUser.Password) {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": "Wrong Passwword",
-			"msg":   "密码错误！",
-		})
+		utils.Fail(c, http.StatusBadRequest, "Wrong Passwword", "密码错误", nil)
 		return
 	}
 
 	token, err := utils.GenerateToken(user.Name)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":  http.StatusInternalServerError,
-			"error": err.Error(),
-			"msg":   "服务器出错！",
-		})
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错！", nil)
 		return
 	}
 
 	global.RedisClient.Set(user.Name, token)
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":  http.StatusOK,
-		"error": "",
-		"msg":   "登录成功",
-		"token": token,
-	})
+	utils.Ok(c, "登录成功", token)
 
 }

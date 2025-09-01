@@ -19,30 +19,18 @@ func Mint(c *gin.Context) {
 
 	var info cardCreate
 	if err := c.ShouldBindJSON(&info); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": err.Error(),
-			"msg":   "JSON解析失败，请核对填写信息",
-		})
+		utils.Fail(c, http.StatusBadRequest, err.Error(), "JSON解析失败，请核对填写信息", nil)
 		return
 	}
 	owner := c.GetString("name")
 	var iUser model.User
 	if err := global.DB.Model(&model.User{}).Where("name = ?", owner).First(&iUser).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":  http.StatusInternalServerError,
-			"error": err.Error(),
-			"msg":   "服务器出错",
-		})
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错", nil)
 		return
 	}
 
 	if iUser.Gocoin < 10 {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":  http.StatusInternalServerError,
-			"error": "",
-			"msg":   "资金不足",
-		})
+		utils.Fail(c, http.StatusBadRequest, "", "资金不足", nil)
 		return
 	}
 
@@ -64,28 +52,14 @@ func Mint(c *gin.Context) {
 	//先上链
 
 	if err := global.DB.Save(&iCard).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":  http.StatusInternalServerError,
-			"error": err.Error(),
-			"msg":   "服务器错误",
-		})
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错", nil)
 		return
 	}
 
 	if err := global.DB.Model(&iUser).Update("gocoin", iUser.Gocoin-10).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":  http.StatusInternalServerError,
-			"error": err.Error(),
-			"msg":   "服务器错误",
-		})
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错", nil)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":  http.StatusOK,
-		"error": "",
-		"msg":   "铸造成功",
-		"data":  iCard,
-	})
-
+	utils.Ok(c, "铸造成功", iCard)
 }

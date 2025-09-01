@@ -3,6 +3,7 @@ package controller
 import (
 	"blockchain/global"
 	"blockchain/model"
+	"blockchain/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,56 +16,37 @@ type hashID struct {
 func Destroy(c *gin.Context) {
 	var ihash hashID
 	if err := c.ShouldBindJSON(&ihash); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": err.Error(),
-			"msg":   "JSON解析失败，请核对填写信息",
-		})
+		utils.Fail(c, http.StatusBadRequest, err.Error(), "JSON解析失败，请核对填写信息", nil)
 		return
 	}
 
 	var iCard model.Card
 	if err := global.DB.Model(&model.Card{}).Where("hash_id = ?", ihash.HashID).First(&iCard).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": err.Error(),
-			"msg":   "哈希值错误",
-		})
+		utils.Fail(c, http.StatusBadRequest, err.Error(), "哈希值错误", nil)
+		return
+	}
+
+	if iCard.OnSale {
+		utils.Fail(c, http.StatusBadRequest, "", "卡牌正在市场中", nil)
 		return
 	}
 
 	var iUser model.User
 	if err := global.DB.Model(&model.User{}).Where("name = ?", iCard.Owner).First(&iUser).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":  http.StatusInternalServerError,
-			"error": err.Error(),
-			"msg":   "无法找到",
-		})
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "无法找到", nil)
 		return
 	}
 
 	if err := global.DB.Model(&iUser).Update("gocoin", iUser.Gocoin+4).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":  http.StatusInternalServerError,
-			"error": err.Error(),
-			"msg":   "无法找到",
-		})
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "无法找到", nil)
 		return
 	}
 
 	if err := global.DB.Delete(&iCard).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":  http.StatusInternalServerError,
-			"error": err.Error(),
-			"msg":   "无法删除",
-		})
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "删除失败", nil)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":  http.StatusOK,
-		"error": "",
-		"msg":   "摧毁成功",
-	})
+	utils.Ok(c, "摧毁成功", nil)
 
 }

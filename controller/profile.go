@@ -3,6 +3,7 @@ package controller
 import (
 	"blockchain/global"
 	"blockchain/model"
+	"blockchain/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,19 +13,10 @@ func Profile(c *gin.Context) {
 
 	var user model.User
 	if err := global.DB.Model(&model.User{}).Where("name = ?", c.GetString("name")).Find(&user).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":  http.StatusInternalServerError,
-			"error": "Server Fail",
-			"msg":   "服务器出错",
-		})
+		utils.Fail(c, http.StatusInternalServerError, "Server Fail", "服务器出错", nil)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":  http.StatusOK,
-		"error": "",
-		"msg":   "成功",
-		"data":  user,
-	})
+	utils.Ok(c, "成功", user)
 
 }

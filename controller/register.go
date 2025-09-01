@@ -19,11 +19,7 @@ type registerUser struct {
 func Register(c *gin.Context) {
 	var iUser registerUser
 	if err := c.ShouldBindJSON(&iUser); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": err.Error(),
-			"msg":   "JSON解析失败，请核对填写信息",
-		})
+		utils.Fail(c, http.StatusBadRequest, err.Error(), "JSON解析失败，请核对填写信息", nil)
 		return
 	}
 
@@ -31,31 +27,19 @@ func Register(c *gin.Context) {
 
 	global.DB.Model(&model.User{}).Where("name = ?", iUser.Name).Count(&total)
 	if total > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": "Repeated Username",
-			"msg":   "用户名重复",
-		})
+		utils.Fail(c, http.StatusBadRequest, "Repeated Username", "用户名重复", nil)
 		return
 	}
 
 	global.DB.Model(&model.User{}).Where("email = ?", iUser.Email).Count(&total)
 	if total > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": "Repeated Email",
-			"msg":   "邮箱重复",
-		})
+		utils.Fail(c, http.StatusBadRequest, "Repeated Email", "邮箱重复", nil)
 		return
 	}
 
 	pwd, err := utils.Encrypt(iUser.Password)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": err.Error(),
-			"msg":   "服务器出错！",
-		})
+		utils.Fail(c, http.StatusInternalServerError, "Server Fail", "服务器出错", nil)
 		return
 	}
 	user := model.User{
@@ -66,20 +50,12 @@ func Register(c *gin.Context) {
 	}
 
 	if err := global.DB.Save(&user).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": err.Error(),
-			"msg":   "服务器出错！",
-		})
+		utils.Fail(c, http.StatusInternalServerError, "Server Fail", "服务器出错", nil)
 		return
 	}
 
 	//区块链生成用户
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":  http.StatusOK,
-		"error": "",
-		"msg":   "注册成功！",
-	})
+	utils.Ok(c, "注册成功", nil)
 
 }

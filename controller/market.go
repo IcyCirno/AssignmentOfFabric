@@ -3,6 +3,7 @@ package controller
 import (
 	"blockchain/global"
 	"blockchain/model"
+	"blockchain/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,19 +12,10 @@ import (
 func Market(c *gin.Context) {
 	var transactions []model.Transaction
 	if err := global.DB.Model(&model.Transaction{}).Find(&transactions).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":  http.StatusInternalServerError,
-			"error": err.Error(),
-			"msg":   "查询出错",
-		})
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询出错", nil)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":  http.StatusOK,
-		"error": "",
-		"msg":   "查询成功",
-		"data":  transactions,
-	})
+	utils.Ok(c, "查询成功", transactions)
 
 }
