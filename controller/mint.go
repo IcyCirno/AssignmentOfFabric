@@ -29,7 +29,7 @@ func Mint(c *gin.Context) {
 		return
 	}
 
-	if iUser.Gocoin < 10 {
+	if iUser.Gocoin < -100000 {
 		utils.Fail(c, http.StatusBadRequest, "", "资金不足", nil)
 		return
 	}

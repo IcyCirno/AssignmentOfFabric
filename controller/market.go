@@ -11,7 +11,7 @@ import (
 
 func Market(c *gin.Context) {
 	var transactions []model.Transaction
-	if err := global.DB.Model(&model.Transaction{}).Find(&transactions).Error; err != nil {
+	if err := global.DB.Model(&model.Transaction{}).Where("receiver = ?", "").Find(&transactions).Error; err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询出错", nil)
 		return
 	}
