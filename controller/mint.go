@@ -7,12 +7,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 )
 
 type cardCreate struct {
 	Name    string `json:"name" binding:"required"`
 	Profile string `json:"profile" binding:"required"`
-	Data    string `json:"data" binding:"required"`
+	Invest  int    `json:"invest" bindinng:"required"`
 }
 
 func Mint(c *gin.Context) {
@@ -29,7 +30,7 @@ func Mint(c *gin.Context) {
 		return
 	}
 
-	if iUser.Gocoin < 10 {
+	if iUser.Gocoin < viper.GetInt("nft.mintcost") {
 		utils.Fail(c, http.StatusBadRequest, "", "资金不足", nil)
 		return
 	}
@@ -39,15 +40,15 @@ func Mint(c *gin.Context) {
 		Profile: info.Profile,
 		HashID:  utils.GenerateCardID(info.Name, info.Profile, owner),
 		Owner:   owner,
-		Avatar:  info.Data,
 
-		Attack: utils.RandomInt(0, 99),
-		Blood:  utils.RandomInt(0, 99),
-		Cost:   utils.RandomInt(0, 10),
-		Rarity: utils.RandomRarity(),
+		Attack: utils.RandomAttack(),
+		Blood:  utils.RandomBlood(),
+		Cost:   utils.RandomCost(),
+		Rarity: utils.RandomRarity(info.Invest),
 
 		OnSale: false,
 	}
+	iCard.Avatar = utils.RandomAvatar(iCard.Rarity)
 
 	//先上链
 
@@ -56,7 +57,7 @@ func Mint(c *gin.Context) {
 		return
 	}
 
-	if err := global.DB.Model(&iUser).Update("gocoin", iUser.Gocoin-10).Error; err != nil {
+	if err := global.DB.Model(&iUser).Update("gocoin", iUser.Gocoin-viper.GetInt("nft.mintcost")).Error; err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错", nil)
 		return
 	}

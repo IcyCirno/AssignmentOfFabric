@@ -1,6 +1,8 @@
 package model
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
@@ -11,5 +13,9 @@ type User struct {
 	Email    string
 	Password string
 
+	Rank   int
 	Gocoin int
+
+	Mine    bool
+	EndTime time.Time
 }

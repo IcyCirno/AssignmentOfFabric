@@ -38,6 +38,10 @@ func Buy(c *gin.Context) {
 		return
 	}
 
+	if user.Name == iUser.Name {
+		utils.Fail(c, http.StatusBadRequest, "Not", "Not", nil)
+	}
+
 	if iUser.Gocoin < trans.Price {
 		utils.Fail(c, http.StatusBadRequest, "Not Enough", "资金不足", nil)
 		return
@@ -55,6 +59,22 @@ func Buy(c *gin.Context) {
 
 	if err := global.DB.Model(&trans).Update("Receiver", iUser.Name).Error; err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "更新失败", nil)
+		return
+	}
+
+	var iCard model.Card
+	if err := global.DB.Model(&model.Card{}).Where("hash_id = ?", trans.CardID).First(&iCard).Error; err != nil {
+		utils.Fail(c, http.StatusBadRequest, err.Error(), "哈希值错误", nil)
+		return
+	}
+
+	if err := global.DB.Model(&iCard).Update("on_sale", false).Error; err != nil {
+		utils.Fail(c, http.StatusInternalServerError, "无法更新", "无法更新", nil)
+		return
+	}
+
+	if err := global.DB.Model(&iCard).Update("owner", iUser.Name).Error; err != nil {
+		utils.Fail(c, http.StatusInternalServerError, "无法更新", "无法更新", nil)
 		return
 	}
 

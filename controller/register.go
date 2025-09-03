@@ -46,7 +46,9 @@ func Register(c *gin.Context) {
 		Name:     iUser.Name,
 		Email:    iUser.Email,
 		Password: pwd,
+		Rank:     0,
 		Gocoin:   viper.GetInt("nft.initasset"),
+		Mine:     false,
 	}
 
 	if err := global.DB.Save(&user).Error; err != nil {

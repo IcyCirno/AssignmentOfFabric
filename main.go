@@ -5,5 +5,7 @@ import (
 )
 
 func main() {
+
 	cmd.Start()
+	go cmd.Update()
 }

@@ -2,6 +2,7 @@ package router
 
 import (
 	"blockchain/controller"
+	"blockchain/global"
 	"blockchain/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -20,6 +21,8 @@ func InitRouter() {
 		port = "8080"
 	}
 	router.Run(port)
+
+	global.Logger.Info("Start Server")
 
 }
 

@@ -11,6 +11,8 @@ func Start() {
 
 	config.InitConfig()
 
+	global.Logger = config.InitLogger()
+
 	db, err := config.InitDB()
 	if err != nil {
 		panic(fmt.Sprintf("DB Load Error: %v", err))

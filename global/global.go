@@ -3,6 +3,7 @@ package global
 import (
 	"blockchain/config"
 
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -14,4 +15,5 @@ const (
 var (
 	DB          *gorm.DB
 	RedisClient *config.RedisClient
+	Logger      *zap.SugaredLogger
 )
