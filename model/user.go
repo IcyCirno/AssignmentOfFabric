@@ -18,4 +18,8 @@ type User struct {
 
 	Mine    bool
 	EndTime time.Time
+
+	A string
+	B string
+	C string
 }

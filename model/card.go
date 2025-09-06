@@ -15,5 +15,7 @@ type Card struct {
 	Attack int
 	Blood  int
 	Cost   int
-	OnSale bool
+
+	OnSale    bool
+	OnDefense bool
 }

@@ -37,6 +37,7 @@ func RegistRouter(r *gin.Engine) {
 		user := auth.Group("/user")
 		{
 			user.POST("/profile", controller.Profile)
+			user.POST("/mine", controller.Mine)
 		}
 
 		card := auth.Group("/card")
@@ -52,6 +53,12 @@ func RegistRouter(r *gin.Engine) {
 		{
 			market.POST("/query", controller.Market)
 			market.POST("/buy", controller.Buy)
+		}
+
+		play := auth.Group("/play")
+		{
+			play.POST("/attack", controller.Attack)
+			play.POST("/defense", controller.Defense)
 		}
 
 	}
