@@ -1,5 +1,0 @@
-package fabric
-
-func InitFabric() {
-
-}

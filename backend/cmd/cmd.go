@@ -1,10 +1,38 @@
 package cmd
 
 import (
+	"blockchain/config"
+	"blockchain/fabric"
 	"blockchain/global"
 	"blockchain/model"
+	"blockchain/router"
+	"fmt"
 	"time"
 )
+
+func Start() {
+
+	config.InitConfig()
+
+	fabric.InitFabric()
+
+	global.Logger = config.InitLogger()
+
+	db, err := config.InitDB()
+	if err != nil {
+		panic(fmt.Sprintf("DB Load Error: %v", err))
+	}
+	global.DB = db
+
+	rdClient, err := config.InitRedis()
+	if err != nil {
+		panic(fmt.Sprintf("Redis Load Error: %v", err))
+	}
+	global.RedisClient = rdClient
+
+	router.InitRouter()
+
+}
 
 func Update() {
 
