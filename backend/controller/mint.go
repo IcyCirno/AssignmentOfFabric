@@ -1,8 +1,7 @@
 package controller
 
 import (
-	"blockchain/global"
-	"blockchain/model"
+	"blockchain/dto"
 	"blockchain/utils"
 	"net/http"
 
@@ -24,8 +23,8 @@ func Mint(c *gin.Context) {
 		return
 	}
 	owner := c.GetString("name")
-	var iUser model.User
-	if err := global.DB.Model(&model.User{}).Where("name = ?", owner).First(&iUser).Error; err != nil {
+	iUser, err := dto.GetUser(owner)
+	if err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错", nil)
 		return
 	}
@@ -35,7 +34,7 @@ func Mint(c *gin.Context) {
 		return
 	}
 
-	iCard := model.Card{
+	iCard := dto.Card{
 		Name:    info.Name,
 		Profile: info.Profile,
 		HashID:  utils.GenerateCardID(info.Name, info.Profile, owner),
@@ -46,18 +45,21 @@ func Mint(c *gin.Context) {
 		Cost:   utils.RandomCost(),
 		Rarity: utils.RandomRarity(info.Invest),
 
-		OnSale: false,
+		OnSale:    false,
+		OnDefense: false,
+		Destroy:   false,
 	}
 	iCard.Avatar = utils.RandomAvatar(iCard.Rarity)
 
-	//先上链
+	iUser.Gocoin -= viper.GetInt("nft.mintcost")
+	iUser.Cards = append(iUser.Cards, iCard.HashID)
 
-	if err := global.DB.Save(&iCard).Error; err != nil {
+	if err := dto.PutCard(iCard); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错", nil)
 		return
 	}
 
-	if err := global.DB.Model(&iUser).Update("gocoin", iUser.Gocoin-viper.GetInt("nft.mintcost")).Error; err != nil {
+	if err := dto.PutUser(iUser); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错", nil)
 		return
 	}

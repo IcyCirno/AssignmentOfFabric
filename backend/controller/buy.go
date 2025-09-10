@@ -1,8 +1,7 @@
 package controller
 
 import (
-	"blockchain/global"
-	"blockchain/model"
+	"blockchain/dto"
 	"blockchain/utils"
 	"net/http"
 
@@ -20,20 +19,20 @@ func Buy(c *gin.Context) {
 		return
 	}
 
-	var trans model.Transaction
-	if err := global.DB.Model(&model.Transaction{}).Where("trans_id = ?", iBuy.OrderID).First(&trans).Error; err != nil {
+	trans, err := dto.GetTransaction(iBuy.OrderID)
+	if err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询出错", nil)
 		return
 	}
 
-	var user model.User
-	if err := global.DB.Model(&model.User{}).Where("name = ?", trans.Seller).First(&user).Error; err != nil {
+	user, err := dto.GetUser(trans.Receiver)
+	if err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询出错", nil)
 		return
 	}
 
-	var iUser model.User
-	if err := global.DB.Model(&model.User{}).Where("name = ?", c.GetString("name")).First(&iUser).Error; err != nil {
+	iUser, err := dto.GetUser(c.GetString("name"))
+	if err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询出错", nil)
 		return
 	}
@@ -47,33 +46,40 @@ func Buy(c *gin.Context) {
 		return
 	}
 
-	if err := global.DB.Model(&user).Update("gocoin", user.Gocoin+trans.Price).Error; err != nil {
+	user.Gocoin += trans.Price
+	for i, id := range user.Cards {
+		if id == trans.CardID {
+			user.Cards = append(user.Cards[:i], user.Cards[:i+1]...)
+			break
+		}
+	}
+	if err := dto.PutUser(user); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "更新失败", nil)
 		return
 	}
 
-	if err := global.DB.Model(&iUser).Update("gocoin", iUser.Gocoin-trans.Price).Error; err != nil {
+	iUser.Gocoin -= trans.Price
+	iUser.Cards = append(iUser.Cards, trans.CardID)
+	if err := dto.PutUser(iUser); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "更新失败", nil)
 		return
 	}
 
-	if err := global.DB.Model(&trans).Update("Receiver", iUser.Name).Error; err != nil {
+	trans.Receiver = iUser.Name
+	if err := dto.PutTransaction(trans); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "更新失败", nil)
 		return
 	}
 
-	var iCard model.Card
-	if err := global.DB.Model(&model.Card{}).Where("hash_id = ?", trans.CardID).First(&iCard).Error; err != nil {
+	iCard, err := dto.GetCard(trans.CardID)
+	if err != nil {
 		utils.Fail(c, http.StatusBadRequest, err.Error(), "哈希值错误", nil)
 		return
 	}
 
-	if err := global.DB.Model(&iCard).Update("on_sale", false).Error; err != nil {
-		utils.Fail(c, http.StatusInternalServerError, "无法更新", "无法更新", nil)
-		return
-	}
-
-	if err := global.DB.Model(&iCard).Update("owner", iUser.Name).Error; err != nil {
+	iCard.OnSale = false
+	iCard.Owner = iUser.Name
+	if err := dto.PutCard(iCard); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, "无法更新", "无法更新", nil)
 		return
 	}

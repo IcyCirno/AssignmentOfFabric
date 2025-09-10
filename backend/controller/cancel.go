@@ -1,8 +1,7 @@
 package controller
 
 import (
-	"blockchain/global"
-	"blockchain/model"
+	"blockchain/dto"
 	"blockchain/utils"
 	"net/http"
 
@@ -20,25 +19,44 @@ func Cancel(c *gin.Context) {
 		return
 	}
 
-	var trans model.Transaction
-	if err := global.DB.Model(&model.Transaction{}).Where("trans_id = ?", icancel.OrderID).First(&trans).Error; err != nil {
+	trans, err := dto.GetTransaction(icancel.OrderID)
+	if err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询失败", nil)
 		return
 	}
 
-	var iCard model.Card
-	if err := global.DB.Model(&model.Card{}).Where("hash_id = ?", trans.CardID).First(&iCard).Error; err != nil {
+	iCard, err := dto.GetCard(trans.CardID)
+	if err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询失败", nil)
 		return
 	}
 
-	if err := global.DB.Model(&iCard).Update("on_sale", false).Error; err != nil {
+	iUser, err := dto.GetUser(c.GetString("name"))
+	if err != nil {
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询失败", nil)
+		return
+	}
+
+	iCard.OnSale = false
+	if err := dto.PutCard(iCard); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "更新失败", nil)
 		return
 	}
 
-	if err := global.DB.Delete(&trans).Error; err != nil {
+	trans.Status = "Canceled"
+	if err := dto.PutTransaction(trans); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "删除失败", nil)
+		return
+	}
+
+	for i, id := range iUser.Trans {
+		if id == trans.TransID {
+			iUser.Trans = append(iUser.Trans[:i], iUser.Trans[:i+1]...)
+			break
+		}
+	}
+	if err := dto.PutUser(iUser); err != nil {
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "更新失败", nil)
 		return
 	}
 

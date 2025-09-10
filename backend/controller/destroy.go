@@ -1,12 +1,12 @@
 package controller
 
 import (
-	"blockchain/global"
-	"blockchain/model"
+	"blockchain/dto"
 	"blockchain/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 )
 
 type hashID struct {
@@ -20,8 +20,8 @@ func Destroy(c *gin.Context) {
 		return
 	}
 
-	var iCard model.Card
-	if err := global.DB.Model(&model.Card{}).Where("hash_id = ?", ihash.HashID).First(&iCard).Error; err != nil {
+	iCard, err := dto.GetCard(ihash.HashID)
+	if err != nil {
 		utils.Fail(c, http.StatusBadRequest, err.Error(), "哈希值错误", nil)
 		return
 	}
@@ -31,18 +31,26 @@ func Destroy(c *gin.Context) {
 		return
 	}
 
-	var iUser model.User
-	if err := global.DB.Model(&model.User{}).Where("name = ?", iCard.Owner).First(&iUser).Error; err != nil {
+	iUser, err := dto.GetUser(iCard.Owner)
+	if err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "无法找到", nil)
 		return
 	}
 
-	if err := global.DB.Model(&iUser).Update("gocoin", iUser.Gocoin+4).Error; err != nil {
+	iUser.Gocoin += viper.GetInt("nft.destroy")
+	for i, id := range iUser.Cards {
+		if id == iCard.HashID {
+			iUser.Cards = append(iUser.Cards[:i], iUser.Cards[i+1:]...)
+			break
+		}
+	}
+	if err := dto.PutUser(iUser); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "无法找到", nil)
 		return
 	}
 
-	if err := global.DB.Delete(&iCard).Error; err != nil {
+	iCard.Destroy = true
+	if err := dto.PutCard(iCard); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "删除失败", nil)
 		return
 	}

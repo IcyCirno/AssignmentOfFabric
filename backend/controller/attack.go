@@ -1,5 +1,6 @@
 package controller
 
+/*
 import (
 	"blockchain/global"
 	"blockchain/model"
@@ -71,3 +72,4 @@ func Attack(c *gin.Context) {
 func Fight(info attack, user model.User) int {
 	return 1
 }
+*/

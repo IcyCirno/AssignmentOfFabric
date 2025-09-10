@@ -1,1 +1,38 @@
-This is an assignment showcase where we use what we’ve learned to build an art protection, trading, and gaming platform. Here, you can choose to be an artist and upload your works, which will be protected on our platform. Players can use the platform-issued currency to randomly mint cards, with the card faces displaying the artists’ works. Each card has random attributes and unique effects. To create different factions, we allow players to trade cards, enhancing the strategic possibilities of offense and defense. All card and transaction information is guaranteed to be traceable and authentic by Fabric.
+# 🎨 Assignment Showcase: Art Protection, Trading & Gaming Platform
+
+This project demonstrates how we apply what we’ve learned to build an **art protection, trading, and gaming platform** using Hyperledger Fabric.
+
+## ✨ Features
+- **Artist Mode**:  
+  Upload your works, which will be securely protected on the platform.
+- **Card Minting**:  
+  Players use platform-issued currency to **randomly mint cards**, where the card faces display the artists’ works.
+- **Unique Attributes**:  
+  Each card comes with **random attributes and unique effects**.
+- **Trading & Strategy**:  
+  Players can trade cards to form factions, enhancing offensive and defensive strategies.
+- **Fabric-Powered Trust**:  
+  All card and transaction information is **traceable and authentic** via Fabric.
+
+---
+
+## 🚀 Getting Started
+
+### Start the Fabric Network
+```bash
+cd /your_fabric_path/fabric-samples/test-network
+
+# Clean up old network
+./network.sh down
+
+# Start a new channel with CA
+./network.sh up createChannel -c mychannel -ca
+
+# Deploy chaincode
+./network.sh deployCC -ccn basic -ccp /your_file_path/AssignmentOfFabric/chaincode -ccl go
+
+```
+---
+
+✅ Now your backend is running and connected to Fabric!  
+⚠️ **Don’t forget to update the file paths in `fabric.go` to match your environment.**

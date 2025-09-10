@@ -1,8 +1,7 @@
 package controller
 
 import (
-	"blockchain/global"
-	"blockchain/model"
+	"blockchain/dto"
 	"blockchain/utils"
 	"net/http"
 
@@ -11,9 +10,9 @@ import (
 
 func Profile(c *gin.Context) {
 
-	var user model.User
-	if err := global.DB.Model(&model.User{}).Where("name = ?", c.GetString("name")).Find(&user).Error; err != nil {
-		utils.Fail(c, http.StatusInternalServerError, "Server Fail", "服务器出错", nil)
+	user, err := dto.GetUser(c.GetString("name"))
+	if err != nil {
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错！", nil)
 		return
 	}
 

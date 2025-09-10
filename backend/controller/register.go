@@ -1,10 +1,11 @@
 package controller
 
 import (
-	"blockchain/global"
-	"blockchain/model"
+	"blockchain/dto"
+	"blockchain/fabric"
 	"blockchain/utils"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -12,7 +13,6 @@ import (
 
 type registerUser struct {
 	Name     string `json:"name" binding:"required"`
-	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required"`
 }
 
@@ -23,17 +23,13 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	var total int64
-
-	global.DB.Model(&model.User{}).Where("name = ?", iUser.Name).Count(&total)
-	if total > 0 {
-		utils.Fail(c, http.StatusBadRequest, "Repeated Username", "用户名重复", nil)
+	data, err := fabric.Contract.EvaluateTransaction("GetUser", iUser.Name)
+	/*if err != nil && err.Error() != "Not Found" {
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "Fabric Fail", nil)
 		return
-	}
-
-	global.DB.Model(&model.User{}).Where("email = ?", iUser.Email).Count(&total)
-	if total > 0 {
-		utils.Fail(c, http.StatusBadRequest, "Repeated Email", "邮箱重复", nil)
+	}*/
+	if data != nil {
+		utils.Fail(c, http.StatusInternalServerError, "", "用户存在", nil)
 		return
 	}
 
@@ -42,21 +38,22 @@ func Register(c *gin.Context) {
 		utils.Fail(c, http.StatusInternalServerError, "Server Fail", "服务器出错", nil)
 		return
 	}
-	user := model.User{
+
+	user := dto.User{
 		Name:     iUser.Name,
-		Email:    iUser.Email,
 		Password: pwd,
-		Rank:     0,
-		Gocoin:   viper.GetInt("nft.initasset"),
-		Mine:     false,
+		CreateAt: time.Now(),
+
+		Rank:   0,
+		Gocoin: viper.GetInt("nft.initasset"),
+
+		EndTime: time.Now(),
 	}
 
-	if err := global.DB.Save(&user).Error; err != nil {
-		utils.Fail(c, http.StatusInternalServerError, "Server Fail", "服务器出错", nil)
+	if err := dto.PutUser(user); err != nil {
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "Fabric Fail", nil)
 		return
 	}
-
-	//区块链生成用户
 
 	utils.Ok(c, "注册成功", nil)
 

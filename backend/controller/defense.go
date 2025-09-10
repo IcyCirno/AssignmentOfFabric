@@ -1,5 +1,6 @@
 package controller
 
+/*
 import (
 	"blockchain/global"
 	"blockchain/model"
@@ -63,3 +64,4 @@ func Defense(c *gin.Context) {
 	utils.Ok(c, "设置成功", nil)
 
 }
+*/

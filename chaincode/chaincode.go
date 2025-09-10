@@ -10,7 +10,6 @@ import (
 
 type User struct {
 	Name     string    `json:"name"`
-	Email    string    `json:"email"`
 	CreateAt time.Time `json:"create_at"`
 
 	Rank   int `json:"rank"`

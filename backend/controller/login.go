@@ -1,8 +1,8 @@
 package controller
 
 import (
+	"blockchain/dto"
 	"blockchain/global"
-	"blockchain/model"
 	"blockchain/utils"
 	"net/http"
 
@@ -10,7 +10,7 @@ import (
 )
 
 type userLogin struct {
-	Email    string `json:"email" binding:"required"`
+	Name     string `json:"name" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
@@ -22,11 +22,9 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	var user model.User
-	err := global.DB.Model(&model.User{}).Where("email = ?", iUser.Email).Find(&user).Error
-
+	user, err := dto.GetUser(iUser.Name)
 	if err != nil {
-		utils.Fail(c, http.StatusBadRequest, err.Error(), "邮箱未注册", nil)
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错！", nil)
 		return
 	}
 

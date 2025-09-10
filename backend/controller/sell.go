@@ -1,8 +1,7 @@
 package controller
 
 import (
-	"blockchain/global"
-	"blockchain/model"
+	"blockchain/dto"
 	"blockchain/utils"
 	"net/http"
 
@@ -26,8 +25,8 @@ func Sell(c *gin.Context) {
 		return
 	}
 
-	var iCard model.Card
-	if err := global.DB.Model(&model.Card{}).Where("hash_id = ?", isell.HashID).First(&iCard).Error; err != nil {
+	iCard, err := dto.GetCard(isell.HashID)
+	if err != nil {
 		utils.Fail(c, http.StatusBadRequest, err.Error(), "哈希值出错", nil)
 		return
 	}
@@ -37,22 +36,31 @@ func Sell(c *gin.Context) {
 		return
 	}
 
-	trans := model.Transaction{
+	iUser, err := dto.GetUser(c.GetString("name"))
+	if err != nil {
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询失败", nil)
+	}
+
+	trans := dto.Transaction{
 		CardID:  iCard.HashID,
 		Seller:  iCard.Owner,
 		TransID: utils.GenerateOrderID(),
 		Price:   isell.Cost,
+		Status:  "For sale",
 	}
 
-	if err := global.DB.Model(&iCard).Update("on_sale", true).Error; err != nil {
+	iCard.OnSale = true
+	if err := dto.PutCard(iCard); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, "无法更新", "无法更新", nil)
 		return
 	}
 
-	if err := global.DB.Save(&trans).Error; err != nil {
+	if err := dto.PutTransaction(trans); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, "无法创建订单", "无法创建订单", nil)
 		return
 	}
+
+	iUser.Trans = append(iUser.Trans, trans.TransID)
 
 	utils.Ok(c, "创建交易成功", trans)
 

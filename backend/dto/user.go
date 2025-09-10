@@ -1,19 +1,41 @@
 package dto
 
-import "time"
+import (
+	"blockchain/fabric"
+	"encoding/json"
+	"time"
+)
 
 type User struct {
 	Name     string    `json:"name"`
-	Email    string    `json:"email"`
+	Password string    `json:"password"`
 	CreateAt time.Time `json:"create_at"`
 
 	Rank   int `json:"rank"`
 	Gocoin int `json:"gocoin"`
 
-	Mine    bool      `json:"mine"`
 	EndTime time.Time `json:"end_time"`
 
-	A string `json:"a"`
-	B string `json:"b"`
-	C string `json:"c"`
+	Cards []string
+	Trans []string
+	A     string `json:"a"`
+	B     string `json:"b"`
+	C     string `json:"c"`
+}
+
+func PutUser(user User) error {
+	data, err := json.Marshal(user)
+	if err == nil {
+		_, err = fabric.Contract.SubmitTransaction("PutUser", string(data))
+	}
+	return err
+}
+
+func GetUser(name string) (User, error) {
+	data, err := fabric.Contract.EvaluateTransaction("GetUser", name)
+	var user User
+	if err == nil {
+		err = json.Unmarshal(data, &user)
+	}
+	return user, err
 }

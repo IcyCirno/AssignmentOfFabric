@@ -1,8 +1,7 @@
 package controller
 
 import (
-	"blockchain/global"
-	"blockchain/model"
+	"blockchain/dto"
 	"blockchain/utils"
 	"net/http"
 	"time"
@@ -23,20 +22,20 @@ func Mine(c *gin.Context) {
 		return
 	}
 
-	var iUser model.User
-	if err := global.DB.Model(&model.User{}).Where("name = ?", c.GetString("name")).First(&iUser).Error; err != nil {
-		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询出错", nil)
+	iUser, err := dto.GetUser(c.GetString("name"))
+	if err != nil {
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错！", nil)
 		return
 	}
 
-	if iUser.Mine {
+	if time.Now().Before(iUser.EndTime.Add(viper.GetDuration("nft.minetime") * time.Hour)) {
 		utils.Fail(c, http.StatusBadRequest, "", "冷却中", nil)
 		return
 	}
 
-	var iCard model.Card
-	if err := global.DB.Model(&model.Card{}).Where("hash_id = ?", info.HashID).First(&iCard).Error; err != nil {
-		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询出错", nil)
+	iCard, err := dto.GetCard(info.HashID)
+	if err != nil {
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错！", nil)
 		return
 	}
 
@@ -45,11 +44,10 @@ func Mine(c *gin.Context) {
 		return
 	}
 
-	iUser.Mine = true
 	iUser.Gocoin += utils.RandomMine(iCard.Rarity)
 	iUser.EndTime = time.Now().Add(time.Duration(viper.GetInt("nft.minetime")) * time.Hour)
 
-	if err := global.DB.Save(&iUser).Error; err != nil {
+	if err := dto.PutUser(iUser); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "更新失败", nil)
 		return
 	}
