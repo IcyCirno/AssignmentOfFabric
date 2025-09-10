@@ -5,9 +5,10 @@ import (
 	"blockchain/global"
 	"blockchain/middleware"
 
+	_ "blockchain/docs"
+
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
-	_ "blockchain/docs"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
