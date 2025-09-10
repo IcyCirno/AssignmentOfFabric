@@ -7,6 +7,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+	_ "blockchain/docs"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func InitRouter() {
@@ -27,6 +30,9 @@ func InitRouter() {
 }
 
 func RegistRouter(r *gin.Engine) {
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
 	api := r.Group("/api")
 	api.POST("/register", controller.Register)
 	api.POST("/login", controller.Login)

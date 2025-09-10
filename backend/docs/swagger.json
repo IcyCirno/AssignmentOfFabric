@@ -1,0 +1,911 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "这是api文档",
+        "title": "API文档",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "paths": {
+        "/api/auth/card/cancel": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "用户取消自己发起的卡牌交易订单",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "取消交易",
+                "parameters": [
+                    {
+                        "description": "交易订单ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.cancel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "取消成功",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误或更新失败",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/card/destroy": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "用户摧毁自己拥有的卡牌，卡牌不在市场中才可摧毁，摧毁后返还部分金币",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "摧毁卡牌",
+                "parameters": [
+                    {
+                        "description": "卡牌哈希ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.hashID"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "摧毁成功",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误或卡牌在市场中",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/card/mint": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "用户使用平台货币铸造新的卡牌，生成随机属性和稀有度",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "铸造卡牌",
+                "parameters": [
+                    {
+                        "description": "卡牌铸造信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.cardCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "铸造成功，返回卡牌信息",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-dto_Card"
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误或资金不足",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/card/query": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "查询当前登录用户所拥有的所有卡牌信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "查询用户卡牌",
+                "responses": {
+                    "200": {
+                        "description": "查询成功，返回用户卡牌列表",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-array_dto_Card"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误或查询失败",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/card/sell": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "用户将自己的卡牌上架市场进行交易",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "上架卡牌",
+                "parameters": [
+                    {
+                        "description": "卡牌上架信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.sell"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建交易成功，返回交易信息",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-dto_Transaction"
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误或卡牌在市场中",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误或创建交易失败",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/market/buy": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "用户购买市场上的卡牌交易订单，完成金币扣除和卡牌转移",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "购买卡牌",
+                "parameters": [
+                    {
+                        "description": "交易订单ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.buy"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "交易成功",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误或资金不足",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误或更新失败",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/market/query": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "查询当前登录用户参与的所有卡牌交易订单",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "查询市场交易",
+                "responses": {
+                    "200": {
+                        "description": "查询成功，返回交易列表",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-array_dto_Transaction"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误或查询失败",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/user/mine": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "用户对指定卡牌进行挖矿操作，冷却中或卡牌在市场上无法挖矿",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "挖矿接口",
+                "parameters": [
+                    {
+                        "description": "挖矿信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.mine"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "挖矿成功",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误或冷却中/卡牌在市场上",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/user/profile": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "根据当前登录用户的名字获取用户详细信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "获取用户信息",
+                "responses": {
+                    "200": {
+                        "description": "请求成功，返回用户信息",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-dto_User"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器错误",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "description": "根据用户名和密码进行登录，成功后返回 Token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "用户登录",
+                "parameters": [
+                    {
+                        "description": "登录信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.UserLogin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "登录成功，返回Token",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误或密码错误",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "description": "用户注册接口，检查用户名是否存在并初始化账户信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "用户注册",
+                "parameters": [
+                    {
+                        "description": "注册信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.RegisterUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "注册成功",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误或JSON解析失败",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误或Fabric操作失败",
+                        "schema": {
+                            "$ref": "#/definitions/utils.APIResponse-string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controller.RegisterUser": {
+            "type": "object",
+            "required": [
+                "name",
+                "password"
+            ],
+            "properties": {
+                "name": {
+                    "description": "用户名",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "密码",
+                    "type": "string"
+                }
+            }
+        },
+        "controller.UserLogin": {
+            "type": "object",
+            "required": [
+                "name",
+                "password"
+            ],
+            "properties": {
+                "name": {
+                    "description": "用户名",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "密码",
+                    "type": "string"
+                }
+            }
+        },
+        "controller.buy": {
+            "type": "object",
+            "required": [
+                "orderid"
+            ],
+            "properties": {
+                "orderid": {
+                    "description": "交易订单ID",
+                    "type": "string"
+                }
+            }
+        },
+        "controller.cancel": {
+            "type": "object",
+            "required": [
+                "orderid"
+            ],
+            "properties": {
+                "orderid": {
+                    "description": "交易订单ID",
+                    "type": "string"
+                }
+            }
+        },
+        "controller.cardCreate": {
+            "type": "object",
+            "required": [
+                "invest",
+                "name",
+                "profile"
+            ],
+            "properties": {
+                "invest": {
+                    "description": "投资等级，用于随机稀有度",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "卡牌名称",
+                    "type": "string"
+                },
+                "profile": {
+                    "description": "卡牌描述",
+                    "type": "string"
+                }
+            }
+        },
+        "controller.hashID": {
+            "type": "object",
+            "required": [
+                "hashid"
+            ],
+            "properties": {
+                "hashid": {
+                    "description": "卡牌唯一ID",
+                    "type": "string"
+                }
+            }
+        },
+        "controller.mine": {
+            "type": "object",
+            "required": [
+                "hash_id"
+            ],
+            "properties": {
+                "hash_id": {
+                    "description": "卡牌唯一ID",
+                    "type": "string"
+                }
+            }
+        },
+        "controller.sell": {
+            "type": "object",
+            "required": [
+                "cost",
+                "hashid"
+            ],
+            "properties": {
+                "cost": {
+                    "description": "交易价格",
+                    "type": "integer"
+                },
+                "hashid": {
+                    "description": "卡牌唯一ID",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.Card": {
+            "type": "object",
+            "properties": {
+                "attack": {
+                    "type": "integer"
+                },
+                "avatar": {
+                    "type": "string"
+                },
+                "blood": {
+                    "type": "integer"
+                },
+                "cost": {
+                    "type": "integer"
+                },
+                "create_at": {
+                    "type": "string"
+                },
+                "destroy": {
+                    "type": "boolean"
+                },
+                "hash_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "on_defense": {
+                    "type": "boolean"
+                },
+                "on_sale": {
+                    "type": "boolean"
+                },
+                "owner": {
+                    "type": "string"
+                },
+                "profile": {
+                    "type": "string"
+                },
+                "rarity": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.Transaction": {
+            "type": "object",
+            "properties": {
+                "card_id": {
+                    "type": "string"
+                },
+                "create_at": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "receiver": {
+                    "type": "string"
+                },
+                "seller": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "trans_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.User": {
+            "type": "object",
+            "properties": {
+                "a": {
+                    "type": "string"
+                },
+                "b": {
+                    "type": "string"
+                },
+                "c": {
+                    "type": "string"
+                },
+                "cards": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "create_at": {
+                    "type": "string"
+                },
+                "end_time": {
+                    "type": "string"
+                },
+                "gocoin": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "rank": {
+                    "type": "integer"
+                },
+                "trans": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "utils.APIResponse-array_dto_Card": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "状态码",
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "description": "返回数据，可以是任何类型",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.Card"
+                    }
+                },
+                "error": {
+                    "description": "错误信息",
+                    "type": "string",
+                    "example": ""
+                },
+                "msg": {
+                    "description": "描述信息",
+                    "type": "string",
+                    "example": "请求成功"
+                }
+            }
+        },
+        "utils.APIResponse-array_dto_Transaction": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "状态码",
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "description": "返回数据，可以是任何类型",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.Transaction"
+                    }
+                },
+                "error": {
+                    "description": "错误信息",
+                    "type": "string",
+                    "example": ""
+                },
+                "msg": {
+                    "description": "描述信息",
+                    "type": "string",
+                    "example": "请求成功"
+                }
+            }
+        },
+        "utils.APIResponse-dto_Card": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "状态码",
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "description": "返回数据，可以是任何类型",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/dto.Card"
+                        }
+                    ]
+                },
+                "error": {
+                    "description": "错误信息",
+                    "type": "string",
+                    "example": ""
+                },
+                "msg": {
+                    "description": "描述信息",
+                    "type": "string",
+                    "example": "请求成功"
+                }
+            }
+        },
+        "utils.APIResponse-dto_Transaction": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "状态码",
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "description": "返回数据，可以是任何类型",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/dto.Transaction"
+                        }
+                    ]
+                },
+                "error": {
+                    "description": "错误信息",
+                    "type": "string",
+                    "example": ""
+                },
+                "msg": {
+                    "description": "描述信息",
+                    "type": "string",
+                    "example": "请求成功"
+                }
+            }
+        },
+        "utils.APIResponse-dto_User": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "状态码",
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "description": "返回数据，可以是任何类型",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/dto.User"
+                        }
+                    ]
+                },
+                "error": {
+                    "description": "错误信息",
+                    "type": "string",
+                    "example": ""
+                },
+                "msg": {
+                    "description": "描述信息",
+                    "type": "string",
+                    "example": "请求成功"
+                }
+            }
+        },
+        "utils.APIResponse-string": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "状态码",
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {
+                    "description": "返回数据，可以是任何类型",
+                    "type": "string"
+                },
+                "error": {
+                    "description": "错误信息",
+                    "type": "string",
+                    "example": ""
+                },
+                "msg": {
+                    "description": "描述信息",
+                    "type": "string",
+                    "example": "请求成功"
+                }
+            }
+        }
+    }
+}

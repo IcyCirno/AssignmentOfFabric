@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// swagger:model Transaction
 type Transaction struct {
 	CardID   string    `json:"card_id"`
 	Seller   string    `json:"seller"`

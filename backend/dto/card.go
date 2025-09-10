@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// swagger:model Card
 type Card struct {
 	HashID   string    `json:"hash_id"`
 	Owner    string    `json:"owner"`
