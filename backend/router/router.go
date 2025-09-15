@@ -4,6 +4,7 @@ import (
 	"blockchain/controller"
 	"blockchain/global"
 	"blockchain/middleware"
+	"blockchain/test"
 
 	_ "blockchain/docs"
 
@@ -68,5 +69,10 @@ func RegistRouter(r *gin.Engine) {
 			play.POST("/defense", controller.Defense)
 		}*/
 
+	}
+
+	testing := r.Group("/test")
+	{
+		testing.POST("/query", test.Query)
 	}
 }

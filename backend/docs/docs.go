@@ -711,15 +711,6 @@ const docTemplate = `{
         "dto.User": {
             "type": "object",
             "properties": {
-                "a": {
-                    "type": "string"
-                },
-                "b": {
-                    "type": "string"
-                },
-                "c": {
-                    "type": "string"
-                },
                 "cards": {
                     "type": "array",
                     "items": {

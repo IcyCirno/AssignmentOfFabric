@@ -19,9 +19,6 @@ type User struct {
 
 	Cards []string
 	Trans []string
-	A     string `json:"a"`
-	B     string `json:"b"`
-	C     string `json:"c"`
 }
 
 func PutUser(user User) error {

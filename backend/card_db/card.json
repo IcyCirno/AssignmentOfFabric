@@ -1,0 +1,21 @@
+[{
+    "name": "a",
+    "profile": "abab",
+    "rarity": "common",
+    "location": "1.jpg"
+}, {
+    "name": "b",
+    "profile": "abab",
+    "rarity": "rare",
+    "location": "1.jpg"
+}, {
+    "name": "c",
+    "profile": "abab",
+    "rarity": "epic",
+    "location": "1.jpg"
+}, {
+    "name": "d",
+    "profile": "abab",
+    "rarity": "legendary",
+    "location": "1.jpg"
+}]

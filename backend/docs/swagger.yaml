@@ -131,12 +131,6 @@ definitions:
     type: object
   dto.User:
     properties:
-      a:
-        type: string
-      b:
-        type: string
-      c:
-        type: string
       cards:
         items:
           type: string

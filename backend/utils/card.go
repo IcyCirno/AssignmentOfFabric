@@ -88,6 +88,10 @@ func RandomAvatar(r string) string {
 	}
 
 	imgPath := images[rand.IntN(len(images))]
+	return GenerateCardData(imgPath)
+}
+
+func GenerateCardData(imgPath string) string {
 	data, _ := os.ReadFile(imgPath)
 	encoded := base64.StdEncoding.EncodeToString(data)
 
