@@ -15,7 +15,7 @@ type cardCreate struct {
 	// 卡牌名称
 	Name string `json:"name" binding:"required"`
 	// 卡牌描述
-	Profile string `json:"profile" binding:"required"`
+	Profile string `json:"profile"`
 	// 投资等级，用于随机稀有度
 	Invest int `json:"invest" binding:"required"`
 }
@@ -43,7 +43,7 @@ func Mint(c *gin.Context) {
 	owner := c.GetString("name")
 	iUser, err := dto.GetUser(owner)
 	if err != nil {
-		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错", "")
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "用户无法从区块链中获得", "")
 		return
 	}
 
@@ -53,10 +53,9 @@ func Mint(c *gin.Context) {
 	}
 
 	iCard := dto.Card{
-		Name:    info.Name,
-		Profile: info.Profile,
-		HashID:  utils.GenerateCardID(info.Name, info.Profile, owner),
-		Owner:   owner,
+		Name:   info.Name,
+		HashID: utils.GenerateCardID(info.Name, info.Profile, owner),
+		Owner:  owner,
 
 		Attack: utils.RandomAttack(),
 		Blood:  utils.RandomBlood(),
@@ -67,18 +66,24 @@ func Mint(c *gin.Context) {
 		OnDefense: false,
 		Destroy:   false,
 	}
-	iCard.Avatar = utils.RandomAvatar(iCard.Rarity)
+	temp, err := utils.RandomAvatar(iCard.Rarity)
+	if err != nil {
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "Fail", "")
+		return 
+	}
+	iCard.Profile = temp.Profile
+	iCard.Avatar = temp.Data
 
-	iUser.Gocoin -= viper.GetInt("nft.mintcost")
+	iUser.Gocoin -= info.Invest
 	iUser.Cards = append(iUser.Cards, iCard.HashID)
 
 	if err := dto.PutCard(iCard); err != nil {
-		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错", "")
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "添加卡牌出错", "")
 		return
 	}
 
 	if err := dto.PutUser(iUser); err != nil {
-		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错", "")
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "修改用户出错", "")
 		return
 	}
 

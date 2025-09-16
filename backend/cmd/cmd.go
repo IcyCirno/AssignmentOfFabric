@@ -34,10 +34,10 @@ func Start() {
 	}
 	global.RedisClient = rdClient
 
-	err = initDB()
+	/*err = initDB()
 	if err != nil {
 		panic(fmt.Sprintf("Cards Load Error: %v", err))
-	}
+	}*/
 
 	router.InitRouter()
 

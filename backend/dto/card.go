@@ -8,9 +8,9 @@ import (
 
 // swagger:model Card
 type Card struct {
-	HashID   string    `json:"hash_id"`
+	HashID   string    `json:"hashid"`
 	Owner    string    `json:"owner"`
-	CreateAt time.Time `json:"create_at"`
+	CreateAt time.Time `json:"createat"`
 
 	Name    string `json:"name"`
 	Profile string `json:"profile"`
@@ -22,8 +22,8 @@ type Card struct {
 	Blood  int `json:"blood"`
 	Cost   int `json:"cost"`
 
-	OnSale    bool `json:"on_sale"`
-	OnDefense bool `json:"on_defense"`
+	OnSale    bool `json:"onsale"`
+	OnDefense bool `json:"ondefense"`
 	Destroy   bool `json:"destroy"`
 }
 

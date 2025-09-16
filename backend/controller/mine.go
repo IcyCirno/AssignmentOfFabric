@@ -43,7 +43,7 @@ func Mine(c *gin.Context) {
 		return
 	}
 
-	if time.Now().Before(iUser.EndTime.Add(viper.GetDuration("nft.minetime") * time.Hour)) {
+	if time.Now().Before(iUser.EndTime.Add(viper.GetDuration("nft.minetime") * time.Second)) {
 		utils.Fail(c, http.StatusBadRequest, "", "冷却中", "")
 		return
 	}

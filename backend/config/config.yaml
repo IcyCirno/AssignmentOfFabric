@@ -2,7 +2,7 @@ mode:
   develop: true
 
 db:
-  dsn: root:123321@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=True&loc=Local
+  dsn: root:12344321@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=True&loc=Local
   maxIdleConns: 10 #最多空闲连接数
   maxOpenConns: 10 #最多打开连接数
 
@@ -19,7 +19,7 @@ jwt:
 nft:
   initasset: 20 #初始资金
   mintcost: 5  #铸造资金
-  minetime: 7 #挖矿冷却期，单位小时
+  minetime: 30 #挖矿冷却期，单位秒
   destroy: 3
 
 log:

@@ -32,7 +32,9 @@ func InitDB() (*gorm.DB, error) {
 	sqlDB.SetMaxOpenConns(viper.GetInt("db.maxOpenConns"))
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
-	db.AutoMigrate(&model.Card{})
+	if err := db.AutoMigrate(&model.Card{}); err != nil {
+		return nil, err
+	}
 
 	return db, nil
 

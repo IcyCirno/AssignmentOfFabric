@@ -53,7 +53,6 @@ definitions:
     required:
     - invest
     - name
-    - profile
     type: object
   controller.hashID:
     properties:
@@ -93,17 +92,17 @@ definitions:
         type: integer
       cost:
         type: integer
-      create_at:
+      createat:
         type: string
       destroy:
         type: boolean
-      hash_id:
+      hashid:
         type: string
       name:
         type: string
-      on_defense:
+      ondefense:
         type: boolean
-      on_sale:
+      onsale:
         type: boolean
       owner:
         type: string
@@ -199,8 +198,7 @@ definitions:
         example: 200
         type: integer
       data:
-        allOf:
-        - $ref: '#/definitions/dto.Card'
+        $ref: '#/definitions/dto.Card'
         description: 返回数据，可以是任何类型
       error:
         description: 错误信息
@@ -218,8 +216,7 @@ definitions:
         example: 200
         type: integer
       data:
-        allOf:
-        - $ref: '#/definitions/dto.Transaction'
+        $ref: '#/definitions/dto.Transaction'
         description: 返回数据，可以是任何类型
       error:
         description: 错误信息
@@ -237,8 +234,7 @@ definitions:
         example: 200
         type: integer
       data:
-        allOf:
-        - $ref: '#/definitions/dto.User'
+        $ref: '#/definitions/dto.User'
         description: 返回数据，可以是任何类型
       error:
         description: 错误信息

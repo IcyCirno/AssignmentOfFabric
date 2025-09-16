@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"blockchain/global"
+	"blockchain/model"
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
@@ -72,23 +74,10 @@ func RandomRarity(invest int) string {
 	return list[len(list)-1].Name
 }
 
-func RandomAvatar(r string) string {
-	stRootDir, _ := os.Getwd()
-	stCardFilePath := filepath.Join(stRootDir, "card_db", r, "")
-	files, _ := os.ReadDir(stCardFilePath)
-
-	var images []string
-	for _, f := range files {
-		if !f.IsDir() {
-			ext := strings.ToLower(filepath.Ext(f.Name()))
-			if ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" {
-				images = append(images, filepath.Join(stCardFilePath, f.Name()))
-			}
-		}
-	}
-
-	imgPath := images[rand.IntN(len(images))]
-	return GenerateCardData(imgPath)
+func RandomAvatar(r string) (model.Card, error) {
+	var card model.Card
+	err := global.DB.Where("rarity = ?", r).Order("RAND()").First(&card).Error
+	return card, err
 }
 
 func GenerateCardData(imgPath string) string {

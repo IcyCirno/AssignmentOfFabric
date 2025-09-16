@@ -74,5 +74,6 @@ func RegistRouter(r *gin.Engine) {
 	testing := r.Group("/test")
 	{
 		testing.POST("/query", test.Query)
+		testing.POST("/add_card", test.AddCard)
 	}
 }

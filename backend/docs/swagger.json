@@ -572,8 +572,7 @@
             "type": "object",
             "required": [
                 "invest",
-                "name",
-                "profile"
+                "name"
             ],
             "properties": {
                 "invest": {
@@ -646,22 +645,22 @@
                 "cost": {
                     "type": "integer"
                 },
-                "create_at": {
+                "createat": {
                     "type": "string"
                 },
                 "destroy": {
                     "type": "boolean"
                 },
-                "hash_id": {
+                "hashid": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
-                "on_defense": {
+                "ondefense": {
                     "type": "boolean"
                 },
-                "on_sale": {
+                "onsale": {
                     "type": "boolean"
                 },
                 "owner": {
@@ -800,11 +799,7 @@
                 },
                 "data": {
                     "description": "返回数据，可以是任何类型",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/dto.Card"
-                        }
-                    ]
+                    "$ref": "#/definitions/dto.Card"
                 },
                 "error": {
                     "description": "错误信息",
@@ -828,11 +823,7 @@
                 },
                 "data": {
                     "description": "返回数据，可以是任何类型",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/dto.Transaction"
-                        }
-                    ]
+                    "$ref": "#/definitions/dto.Transaction"
                 },
                 "error": {
                     "description": "错误信息",
@@ -856,11 +847,7 @@
                 },
                 "data": {
                     "description": "返回数据，可以是任何类型",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/dto.User"
-                        }
-                    ]
+                    "$ref": "#/definitions/dto.User"
                 },
                 "error": {
                     "description": "错误信息",
