@@ -2,6 +2,7 @@ package controller
 
 import (
 	"blockchain/dto"
+	"blockchain/global"
 	"blockchain/utils"
 	"net/http"
 
@@ -52,6 +53,11 @@ func Sell(c *gin.Context) {
 		return
 	}
 
+	if iCard.Destroy {
+		utils.Fail(c, http.StatusBadRequest, "", "卡牌已被摧毁", "")
+		return
+	}
+
 	iUser, err := dto.GetUser(c.GetString("name"))
 	if err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询失败", "")
@@ -92,6 +98,8 @@ func Sell(c *gin.Context) {
 		utils.Fail(c, http.StatusInternalServerError, "无法更新", "无法更新", "")
 		return
 	}
+
+	global.Logger.Info(root.Trans)
 
 	utils.Ok(c, "创建交易成功", trans)
 }

@@ -69,7 +69,7 @@ func Mint(c *gin.Context) {
 	temp, err := utils.RandomAvatar(iCard.Rarity)
 	if err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "Fail", "")
-		return 
+		return
 	}
 	iCard.Profile = temp.Profile
 	iCard.Avatar = temp.Data
