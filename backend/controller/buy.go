@@ -2,6 +2,7 @@ package controller
 
 import (
 	"blockchain/dto"
+	"blockchain/model"
 	"blockchain/utils"
 	"net/http"
 
@@ -40,7 +41,12 @@ func Buy(c *gin.Context) {
 		return
 	}
 
-	user, err := dto.GetUser(trans.Receiver)
+	if trans.Status == "Canceled" {
+		utils.Fail(c, http.StatusBadRequest, "", "交易已下架", "")
+		return
+	}
+
+	user, err := dto.GetUser(trans.Seller)
 	if err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询出错", "")
 		return
@@ -85,6 +91,7 @@ func Buy(c *gin.Context) {
 
 	// 更新交易订单接收者
 	trans.Receiver = iUser.Name
+	trans.Status = "Done"
 	if err := dto.PutTransaction(trans); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "更新失败", "")
 		return
@@ -96,12 +103,17 @@ func Buy(c *gin.Context) {
 		utils.Fail(c, http.StatusBadRequest, err.Error(), "哈希值错误", "")
 		return
 	}
+
 	iCard.OnSale = false
+	iCard.TransID = ""
 	iCard.Owner = iUser.Name
 	if err := dto.PutCard(iCard); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, "无法更新", "无法更新", "")
 		return
 	}
 
-	utils.Ok(c, "交易成功", "")
+	utils.Ok(c, "交易成功", model.CardAndTrans{
+		Card:        iCard,
+		Transaction: trans,
+	})
 }

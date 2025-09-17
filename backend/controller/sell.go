@@ -2,7 +2,7 @@ package controller
 
 import (
 	"blockchain/dto"
-	"blockchain/global"
+	"blockchain/model"
 	"blockchain/utils"
 	"net/http"
 
@@ -77,6 +77,7 @@ func Sell(c *gin.Context) {
 	}
 
 	iCard.OnSale = true
+	iCard.TransID = trans.TransID
 	if err := dto.PutCard(iCard); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, "无法更新", "无法更新", "")
 		return
@@ -99,7 +100,8 @@ func Sell(c *gin.Context) {
 		return
 	}
 
-	global.Logger.Info(root.Trans)
-
-	utils.Ok(c, "创建交易成功", trans)
+	utils.Ok(c, "创建交易成功", model.CardAndTrans{
+		Card:        iCard,
+		Transaction: trans,
+	})
 }

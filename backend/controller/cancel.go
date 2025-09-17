@@ -2,6 +2,7 @@ package controller
 
 import (
 	"blockchain/dto"
+	"blockchain/model"
 	"blockchain/utils"
 	"net/http"
 
@@ -59,6 +60,7 @@ func Cancel(c *gin.Context) {
 	}
 
 	iCard.OnSale = false
+	iCard.TransID = ""
 	if err := dto.PutCard(iCard); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "更新失败", "")
 		return
@@ -92,5 +94,8 @@ func Cancel(c *gin.Context) {
 		return
 	}
 
-	utils.Ok(c, "已取消", "")
+	utils.Ok(c, "已取消", model.CardAndTrans{
+		Card:        iCard,
+		Transaction: trans,
+	})
 }

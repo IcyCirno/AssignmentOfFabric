@@ -38,7 +38,9 @@ type Card struct {
 	Blood  int `json:"blood"`
 	Cost   int `json:"cost"`
 
-	OnSale    bool `json:"onsale"`
+	OnSale  bool   `json:"onsale"`
+	TransID string `json:"transid"`
+
 	OnDefense bool `json:"ondefense"`
 	Destroy   bool `json:"destroy"`
 }
