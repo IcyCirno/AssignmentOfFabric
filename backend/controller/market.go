@@ -21,7 +21,7 @@ import (
 func Market(c *gin.Context) {
 	var transactions []dto.Transaction
 
-	iUser, err := dto.GetUser(c.GetString("name"))
+	iUser, err := dto.GetUser("root")
 	if err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询出错", "")
 		return

@@ -57,6 +57,11 @@ func Sell(c *gin.Context) {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询失败", "")
 	}
 
+	root, err := dto.GetUser("root")
+	if err != nil {
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "查询失败", "")
+	}
+
 	trans := dto.Transaction{
 		CardID:  iCard.HashID,
 		Seller:  iCard.Owner,
@@ -77,6 +82,16 @@ func Sell(c *gin.Context) {
 	}
 
 	iUser.Trans = append(iUser.Trans, trans.TransID)
+	if err := dto.PutUser(iUser); err != nil {
+		utils.Fail(c, http.StatusInternalServerError, "无法更新", "无法更新", "")
+		return
+	}
+
+	root.Trans = append(root.Trans, trans.TransID)
+	if err := dto.PutUser(root); err != nil {
+		utils.Fail(c, http.StatusInternalServerError, "无法更新", "无法更新", "")
+		return
+	}
 
 	utils.Ok(c, "创建交易成功", trans)
 }
