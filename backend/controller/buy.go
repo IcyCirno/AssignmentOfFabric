@@ -23,7 +23,7 @@ type buy struct {
 // @Accept json
 // @Produce json
 // @Param data body buy true "交易订单ID"
-// @Success 200 {object} utils.APIResponse[string] "交易成功"
+// @Success 200 {object} utils.APIResponse[model.CardAndTrans] "交易成功"
 // @Failure 400 {object} utils.APIResponse[string] "请求参数错误或资金不足"
 // @Failure 500 {object} utils.APIResponse[string] "服务器内部错误或更新失败"
 // @Security ApiKeyAuth

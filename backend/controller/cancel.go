@@ -23,7 +23,7 @@ type cancel struct {
 // @Accept json
 // @Produce json
 // @Param data body cancel true "交易订单ID"
-// @Success 200 {object} utils.APIResponse[string] "取消成功"
+// @Success 200 {object} utils.APIResponse[model.CardAndTrans] "取消成功"
 // @Failure 400 {object} utils.APIResponse[string] "请求参数错误"
 // @Failure 500 {object} utils.APIResponse[string] "服务器内部错误或更新失败"
 // @Security ApiKeyAuth

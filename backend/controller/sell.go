@@ -25,7 +25,7 @@ type sell struct {
 // @Accept json
 // @Produce json
 // @Param data body sell true "卡牌上架信息"
-// @Success 200 {object} utils.APIResponse[dto.Transaction] "创建交易成功，返回交易信息"
+// @Success 200 {object} utils.APIResponse[model.CardAndTrans] "创建交易成功，返回交易信息"
 // @Failure 400 {object} utils.APIResponse[string] "请求参数错误或卡牌在市场中"
 // @Failure 500 {object} utils.APIResponse[string] "服务器内部错误或创建交易失败"
 // @Security ApiKeyAuth

@@ -110,22 +110,7 @@ definitions:
         type: string
       rarity:
         type: string
-    type: object
-  dto.Transaction:
-    properties:
-      card_id:
-        type: string
-      create_at:
-        type: string
-      price:
-        type: integer
-      receiver:
-        type: string
-      seller:
-        type: string
-      status:
-        type: string
-      trans_id:
+      transid:
         type: string
     type: object
   dto.User:
@@ -151,6 +136,51 @@ definitions:
           type: string
         type: array
     type: object
+  model.CardAndTrans:
+    properties:
+      attack:
+        type: integer
+      avatar:
+        type: string
+      blood:
+        type: integer
+      card_id:
+        type: string
+      cost:
+        type: integer
+      create_at:
+        type: string
+      createat:
+        type: string
+      destroy:
+        type: boolean
+      hashid:
+        type: string
+      name:
+        type: string
+      ondefense:
+        type: boolean
+      onsale:
+        type: boolean
+      owner:
+        type: string
+      price:
+        type: integer
+      profile:
+        type: string
+      rarity:
+        type: string
+      receiver:
+        type: string
+      seller:
+        type: string
+      status:
+        type: string
+      trans_id:
+        type: string
+      transid:
+        type: string
+    type: object
   utils.APIResponse-array_dto_Card:
     properties:
       code:
@@ -171,7 +201,7 @@ definitions:
         example: 请求成功
         type: string
     type: object
-  utils.APIResponse-array_dto_Transaction:
+  utils.APIResponse-array_model_CardAndTrans:
     properties:
       code:
         description: 状态码
@@ -180,7 +210,7 @@ definitions:
       data:
         description: 返回数据，可以是任何类型
         items:
-          $ref: '#/definitions/dto.Transaction'
+          $ref: '#/definitions/model.CardAndTrans'
         type: array
       error:
         description: 错误信息
@@ -198,25 +228,8 @@ definitions:
         example: 200
         type: integer
       data:
-        $ref: '#/definitions/dto.Card'
-        description: 返回数据，可以是任何类型
-      error:
-        description: 错误信息
-        example: ""
-        type: string
-      msg:
-        description: 描述信息
-        example: 请求成功
-        type: string
-    type: object
-  utils.APIResponse-dto_Transaction:
-    properties:
-      code:
-        description: 状态码
-        example: 200
-        type: integer
-      data:
-        $ref: '#/definitions/dto.Transaction'
+        allOf:
+        - $ref: '#/definitions/dto.Card'
         description: 返回数据，可以是任何类型
       error:
         description: 错误信息
@@ -234,7 +247,27 @@ definitions:
         example: 200
         type: integer
       data:
-        $ref: '#/definitions/dto.User'
+        allOf:
+        - $ref: '#/definitions/dto.User'
+        description: 返回数据，可以是任何类型
+      error:
+        description: 错误信息
+        example: ""
+        type: string
+      msg:
+        description: 描述信息
+        example: 请求成功
+        type: string
+    type: object
+  utils.APIResponse-model_CardAndTrans:
+    properties:
+      code:
+        description: 状态码
+        example: 200
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/model.CardAndTrans'
         description: 返回数据，可以是任何类型
       error:
         description: 错误信息
@@ -288,7 +321,7 @@ paths:
         "200":
           description: 取消成功
           schema:
-            $ref: '#/definitions/utils.APIResponse-string'
+            $ref: '#/definitions/utils.APIResponse-model_CardAndTrans'
         "400":
           description: 请求参数错误
           schema:
@@ -405,7 +438,7 @@ paths:
         "200":
           description: 创建交易成功，返回交易信息
           schema:
-            $ref: '#/definitions/utils.APIResponse-dto_Transaction'
+            $ref: '#/definitions/utils.APIResponse-model_CardAndTrans'
         "400":
           description: 请求参数错误或卡牌在市场中
           schema:
@@ -437,7 +470,7 @@ paths:
         "200":
           description: 交易成功
           schema:
-            $ref: '#/definitions/utils.APIResponse-string'
+            $ref: '#/definitions/utils.APIResponse-model_CardAndTrans'
         "400":
           description: 请求参数错误或资金不足
           schema:
@@ -462,7 +495,7 @@ paths:
         "200":
           description: 查询成功，返回交易列表
           schema:
-            $ref: '#/definitions/utils.APIResponse-array_dto_Transaction'
+            $ref: '#/definitions/utils.APIResponse-array_model_CardAndTrans'
         "500":
           description: 服务器内部错误或查询失败
           schema:
