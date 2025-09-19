@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"blockchain/dto"
 	"blockchain/global"
 	"blockchain/model"
 	"crypto/sha256"
@@ -25,7 +26,7 @@ const factor = 0.01
 
 var (
 	mine = map[string]int{"common": 1, "rare": 2, "epic": 3, "legendary": 4}
-	list = []rarity{{"common", 90}, {"rare", 8}, {"epic", 1.5}, {"legendary", 0.5}}
+	list = []rarity{{"common", 25}, {"rare", 25}, {"epic", 25}, {"legendary", 25}}
 )
 
 func GenerateCardID(name string, profile string, owner string) string {
@@ -36,10 +37,6 @@ func GenerateCardID(name string, profile string, owner string) string {
 
 func GenerateOrderID() string {
 	return uuid.New().String()
-}
-
-func RandomMine(r string) int {
-	return rand.IntN(mine[r]) + 1
 }
 
 func RandomAttack() int {
@@ -98,4 +95,26 @@ func GenerateCardData(imgPath string) string {
 	}
 
 	return fmt.Sprintf("data:%s;base64,%s", mime, encoded)
+}
+
+func CreateCard(name string, owner string, invest int) (dto.Card, error) {
+	iCard := dto.Card{
+		Name:   name,
+		HashID: GenerateCardID(name, "nft_card", owner),
+		Owner:  owner,
+
+		Attack: RandomAttack(),
+		Blood:  RandomBlood(),
+		Cost:   RandomCost(),
+		Rarity: RandomRarity(invest),
+
+		OnSale:    false,
+		OnDefense: false,
+		Destroy:   false,
+	}
+	temp, err := RandomAvatar(iCard.Rarity)
+	iCard.Profile = temp.Profile
+	iCard.Avatar = temp.Data
+
+	return iCard, err
 }

@@ -29,6 +29,10 @@ type Card struct {
 	Destroy   bool `json:"destroy"`
 }
 
+func (m *Card) Free() bool {
+	return !m.OnSale && !m.Destroy
+}
+
 func PutCard(card Card) error {
 	data, err := json.Marshal(card)
 	if err == nil {

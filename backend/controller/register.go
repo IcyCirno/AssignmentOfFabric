@@ -59,6 +59,19 @@ func Register(c *gin.Context) {
 		EndTime:  time.Now(),
 	}
 
+	for i := 1; i <= 3; i++ {
+		card, err := utils.CreateCard("init_"+string(i), c.GetString("name"), 0)
+		if err != nil {
+			utils.Fail(c, http.StatusInternalServerError, err.Error(), "Fail to Init User", "")
+			return
+		}
+		user.Cards = append(user.Cards, card.HashID)
+		if err := dto.PutCard(card); err != nil {
+			utils.Fail(c, http.StatusInternalServerError, err.Error(), "添加卡牌出错", "")
+			return
+		}
+	}
+
 	if err := dto.PutUser(user); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "Fabric Fail", "")
 		return

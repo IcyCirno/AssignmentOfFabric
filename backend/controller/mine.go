@@ -13,8 +13,10 @@ import (
 // mineRequest 挖矿请求参数
 // swagger:model mineRequest
 type mine struct {
-	// 卡牌唯一ID
-	HashID string `json:"hash_id" binding:"required"`
+	Difficulty string `json:"difficulty" binding:"required"`
+	A          string `json:"a" binding:"required"`
+	B          string `json:"b" binding:"required"`
+	C          string `json:"c" binding:"required"`
 }
 
 // Mine godoc
@@ -48,25 +50,45 @@ func Mine(c *gin.Context) {
 		return
 	}
 
-	iCard, err := dto.GetCard(info.HashID)
+	iUser.EndTime = time.Now().Add(viper.GetDuration("nft.minetime"))
+
+	A, err := dto.GetCard(info.A)
 	if err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错！", "")
 		return
 	}
-
-	if iCard.Destroy {
-		utils.Fail(c, http.StatusBadRequest, "", "卡牌已摧毁", "")
+	if !A.Free() {
+		utils.Fail(c, http.StatusBadRequest, "", "卡牌不在空闲状态", "")
 		return
 	}
 
-	if iCard.OnSale {
-		utils.Fail(c, http.StatusBadRequest, "", "卡牌正在市场", "")
+	B, err := dto.GetCard(info.B)
+	if err != nil {
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错！", "")
+		return
+	}
+	if !B.Free() {
+		utils.Fail(c, http.StatusBadRequest, "", "卡牌不在空闲状态", "")
 		return
 	}
 
-	iUser.Gocoin += utils.RandomMine(iCard.Rarity)
-	iUser.EndTime = time.Now().Add(viper.GetDuration("nft.minetime"))
+	C, err := dto.GetCard(info.C)
+	if err != nil {
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错！", "")
+		return
+	}
+	if !C.Free() {
+		utils.Fail(c, http.StatusBadRequest, "", "卡牌不在空闲状态", "")
+		return
+	}
 
+	ok, money := utils.RandomMine(info.Difficulty, A, B, C)
+	if !ok {
+		utils.Ok(c, "挑战失败！", "")
+		return
+	}
+
+	iUser.Gocoin += money
 	if err := dto.PutUser(iUser); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "更新失败", "")
 		return

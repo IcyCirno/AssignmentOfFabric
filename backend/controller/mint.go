@@ -52,27 +52,11 @@ func Mint(c *gin.Context) {
 		return
 	}
 
-	iCard := dto.Card{
-		Name:   info.Name,
-		HashID: utils.GenerateCardID(info.Name, info.Profile, owner),
-		Owner:  owner,
-
-		Attack: utils.RandomAttack(),
-		Blood:  utils.RandomBlood(),
-		Cost:   utils.RandomCost(),
-		Rarity: utils.RandomRarity(info.Invest),
-
-		OnSale:    false,
-		OnDefense: false,
-		Destroy:   false,
-	}
-	temp, err := utils.RandomAvatar(iCard.Rarity)
+	iCard, err := utils.CreateCard(info.Name, c.GetString("name"), info.Invest)
 	if err != nil {
-		utils.Fail(c, http.StatusInternalServerError, err.Error(), "Fail", "")
+		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器错误", "")
 		return
 	}
-	iCard.Profile = temp.Profile
-	iCard.Avatar = temp.Data
 
 	iUser.Gocoin -= info.Invest
 	iUser.Cards = append(iUser.Cards, iCard.HashID)
