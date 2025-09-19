@@ -61,7 +61,7 @@ func Register(c *gin.Context) {
 	}
 
 	for i := 1; i <= 3; i++ {
-		card, err := utils.CreateCard("init_"+strconv.Itoa(i), c.GetString("name"), 0)
+		card, err := utils.CreateCard("init_"+strconv.Itoa(i), iUser.Name, 0)
 		if err != nil {
 			utils.Fail(c, http.StatusInternalServerError, err.Error(), "Fail to Init User", "")
 			return
