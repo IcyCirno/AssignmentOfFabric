@@ -1,21 +1,43 @@
 [{
-    "name": "a",
-    "profile": "abab",
-    "rarity": "common",
-    "location": "1.jpg"
-}, {
-    "name": "b",
-    "profile": "abab",
-    "rarity": "rare",
-    "location": "1.jpg"
-}, {
-    "name": "c",
-    "profile": "abab",
-    "rarity": "epic",
-    "location": "1.jpg"
-}, {
-    "name": "d",
-    "profile": "abab",
-    "rarity": "legendary",
-    "location": "1.jpg"
-}]
+        "name": "c_1",
+        "profile": "身着洁白衣袍的少女，静静倚靠在书桌前，眼神中透出若有所思的神采。她善于倾听与思考，总能在沉默中洞察真相。手边的信纸，或许藏着未寄出的心意，或许是解谜的关键。",
+        "rarity": "common",
+        "location": "1.jpg"
+    },
+    {
+        "name": "r_1",
+        "profile": "身披晨露编织的薄纱，Celcura Cku 于林间光影交界处静坐。她指尖流转的不只是微光，更是万物生长的低语。落叶为纸、露珠为墨，她所书写的是森林尚未诉说的诗篇。",
+        "rarity": "rare",
+        "location": "1.jpg"
+    },
+    {
+        "name": "e_1",
+        "profile": "在暮色与星辰交界之时，少年手中燃起了一只火焰纸飞机。它飞过的轨迹，点亮了夜空，也点燃了心中的愿望。无人知晓，它是承载希望的火种，还是通往未知的启示。",
+        "rarity": "epic",
+        "location": "1.jpg"
+    },
+    {
+        "name": "e_2",
+        "profile": "迎春之舞",
+        "rarity": "epic",
+        "location": "2.jpg"
+    },
+    {
+        "name": "e_3",
+        "profile": "双碟梦",
+        "rarity": "epic",
+        "location": "3.jpg"
+    },
+    {
+        "name": "d_1",
+        "profile": "她闭上双眼，将旋律化作轻吻吹向远方。音符化作星光，温柔而坚定地传递希望。每一次歌唱，都是一段未说出口的心意，每一次心跳，都是世界的节拍。",
+        "rarity": "legendary",
+        "location": "1.jpg"
+    },
+    {
+        "name": "d_2",
+        "profile": "傲立",
+        "rarity": "legendary",
+        "location": "2.jpg"
+    }
+]

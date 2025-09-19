@@ -2,6 +2,7 @@ package controller
 
 import (
 	"blockchain/dto"
+	"blockchain/global"
 	"blockchain/utils"
 	"net/http"
 	"time"
@@ -43,7 +44,7 @@ func Mine(c *gin.Context) {
 		return
 	}
 
-	if time.Now().Before(iUser.EndTime.Add(viper.GetDuration("nft.minetime") * time.Second)) {
+	if time.Now().Before(iUser.EndTime.Add(viper.GetDuration("nft.minetime"))) {
 		utils.Fail(c, http.StatusBadRequest, "", "冷却中", "")
 		return
 	}
@@ -54,14 +55,21 @@ func Mine(c *gin.Context) {
 		return
 	}
 
+	if iCard.Destroy {
+		utils.Fail(c, http.StatusBadRequest, "", "卡牌已摧毁", "")
+		return
+	}
+
 	if iCard.OnSale {
 		utils.Fail(c, http.StatusBadRequest, "", "卡牌正在市场", "")
 		return
 	}
 
+	global.Logger.Infof("User : %d", iUser.Gocoin)
 	iUser.Gocoin += utils.RandomMine(iCard.Rarity)
-	iUser.EndTime = time.Now().Add(time.Duration(viper.GetInt("nft.minetime")) * time.Hour)
+	iUser.EndTime = time.Now().Add(viper.GetDuration("nft.minetime"))
 
+	global.Logger.Infof("User : %d", iUser.Gocoin)
 	if err := dto.PutUser(iUser); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "更新失败", "")
 		return

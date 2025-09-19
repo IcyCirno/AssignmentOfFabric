@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 func Start() {
@@ -39,8 +40,26 @@ func Start() {
 		panic(fmt.Sprintf("Cards Load Error: %v", err))
 	}*/
 
+	if err := initRoot(); err != nil {
+		panic(fmt.Sprintf("Root Load Error: %v", err))
+	}
+
 	router.InitRouter()
 
+}
+
+func initRoot() error {
+	if _, err := dto.GetUser("root"); err == nil {
+		return nil
+	}
+	return dto.PutUser(dto.User{
+		Name:     "root",
+		Password: "123321",
+		CreateAt: time.Now(),
+		Rank:     0,
+		Gocoin:   0,
+		EndTime:  time.Now(),
+	})
 }
 
 func initDB() error {

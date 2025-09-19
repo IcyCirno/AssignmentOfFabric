@@ -39,7 +39,7 @@ func GenerateOrderID() string {
 }
 
 func RandomMine(r string) int {
-	return rand.IntN(mine[r])
+	return rand.IntN(mine[r]) + 1
 }
 
 func RandomAttack() int {
