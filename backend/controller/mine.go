@@ -39,6 +39,11 @@ func Mine(c *gin.Context) {
 		return
 	}
 
+	if info.A == info.B || info.A == info.C || info.B == info.C {
+		utils.Fail(c, http.StatusBadRequest, "", "不能重复！", "")
+		return
+	}
+
 	iUser, err := dto.GetUser(c.GetString("name"))
 	if err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "服务器出错！", "")
