@@ -2,7 +2,6 @@ package controller
 
 import (
 	"blockchain/dto"
-	"blockchain/global"
 	"blockchain/utils"
 	"net/http"
 	"time"
@@ -65,11 +64,9 @@ func Mine(c *gin.Context) {
 		return
 	}
 
-	global.Logger.Infof("User : %d", iUser.Gocoin)
 	iUser.Gocoin += utils.RandomMine(iCard.Rarity)
 	iUser.EndTime = time.Now().Add(viper.GetDuration("nft.minetime"))
 
-	global.Logger.Infof("User : %d", iUser.Gocoin)
 	if err := dto.PutUser(iUser); err != nil {
 		utils.Fail(c, http.StatusInternalServerError, err.Error(), "更新失败", "")
 		return
