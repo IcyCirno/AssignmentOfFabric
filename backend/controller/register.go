@@ -12,26 +12,11 @@ import (
 	"github.com/spf13/viper"
 )
 
-// RegisterUser 注册请求参数
-// swagger:model RegisterUser
 type RegisterUser struct {
-	// 用户名
-	Name string `json:"name" binding:"required"`
-	// 密码
+	Name     string `json:"name" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
-// Register godoc
-// @Summary 用户注册
-// @Description 用户注册接口，检查用户名是否存在并初始化账户信息
-// @Tags User
-// @Accept json
-// @Produce json
-// @Param data body RegisterUser true "注册信息"
-// @Success 200 {object} utils.APIResponse[string] "注册成功"
-// @Failure 400 {object} utils.APIResponse[string] "请求参数错误或JSON解析失败"
-// @Failure 500 {object} utils.APIResponse[string] "服务器内部错误或Fabric操作失败"
-// @Router /api/register [post]
 func Register(c *gin.Context) {
 	var iUser RegisterUser
 	if err := c.ShouldBindJSON(&iUser); err != nil {

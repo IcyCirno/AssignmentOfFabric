@@ -9,29 +9,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-// cardCreate 铸造卡牌请求参数
-// swagger:model cardCreate
 type cardCreate struct {
-	// 卡牌名称
-	Name string `json:"name" binding:"required"`
-	// 卡牌描述
+	Name    string `json:"name" binding:"required"`
 	Profile string `json:"profile"`
-	// 投资等级，用于随机稀有度
-	Invest int `json:"invest" binding:"required"`
+	Invest  int    `json:"invest" binding:"required"`
 }
 
-// Mint godoc
-// @Summary 铸造卡牌
-// @Description 用户使用平台货币铸造新的卡牌，生成随机属性和稀有度
-// @Tags NFT
-// @Accept json
-// @Produce json
-// @Param data body cardCreate true "卡牌铸造信息"
-// @Success 200 {object} utils.APIResponse[dto.Card] "铸造成功，返回卡牌信息"
-// @Failure 400 {object} utils.APIResponse[string] "请求参数错误或资金不足"
-// @Failure 500 {object} utils.APIResponse[string] "服务器内部错误"
-// @Security ApiKeyAuth
-// @Router /api/auth/card/mint [post]
 func Mint(c *gin.Context) {
 
 	var info cardCreate

@@ -4,14 +4,9 @@ import (
 	"blockchain/controller"
 	"blockchain/global"
 	"blockchain/middleware"
-	"blockchain/test"
-
-	_ "blockchain/docs"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
-	swaggerfiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func InitRouter() {
@@ -32,8 +27,6 @@ func InitRouter() {
 }
 
 func RegistRouter(r *gin.Engine) {
-
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	api := r.Group("/api")
 	api.POST("/register", controller.Register)
@@ -63,17 +56,6 @@ func RegistRouter(r *gin.Engine) {
 			market.POST("/buy", controller.Buy)
 		}
 
-		/*play := auth.Group("/play")
-		{
-			play.POST("/attack", controller.Attack)
-			play.POST("/defense", controller.Defense)
-		}*/
-
 	}
 
-	testing := r.Group("/test")
-	{
-		testing.POST("/query", test.Query)
-		testing.POST("/add_card", test.AddCard)
-	}
 }

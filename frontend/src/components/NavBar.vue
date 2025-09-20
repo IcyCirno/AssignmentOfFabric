@@ -3,14 +3,7 @@
     <div class="nav-left">
       <router-link to="/">首页</router-link>
       <router-link to="/market">市场</router-link>
-      <router-link to="/collection">我的收藏</router-link>
-      <router-link v-if="isLoggedIn" to="/mint">铸造</router-link>
-      <router-link v-if="isLoggedIn" to="/mine">挖矿</router-link>
-    </div>
-
-    <div class="nav-right">
-      <router-link v-if="!isLoggedIn" to="/auth">登录</router-link>
-      <router-link v-else to="/profile">用户</router-link>
+      <router-link v-if="isLoggedIn" to="/mine">副本</router-link>
     </div>
   </nav>
 </template>

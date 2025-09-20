@@ -1,7 +1,7 @@
 <template>
   <Motion
     ref="containerRef"
-    :class="cn('relative select-none', props.class)"
+    :class="cn('absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none', props.class)"
     :style="{
       width: containerWidth,
       height: containerHeight,
@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 import { Motion, useAnimate } from "motion-v";
 import { ref, computed, onMounted, onUnmounted, type Ref } from "vue";
 
@@ -187,4 +187,13 @@ onUnmounted(() => {
 });
 </script>
 
-<style></style>
+<style>
+
+:deep(.motion) {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 0 auto; /* 水平居中 */
+}
+
+</style>

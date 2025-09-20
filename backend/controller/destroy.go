@@ -9,25 +9,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-// DestroyRequest 摧毁卡牌请求参数
-// swagger:model DestroyRequest
 type hashID struct {
-	// 卡牌唯一ID
 	HashID string `json:"hashid" binding:"required"`
 }
 
-// Destroy godoc
-// @Summary 摧毁卡牌
-// @Description 用户摧毁自己拥有的卡牌，卡牌不在市场中才可摧毁，摧毁后返还部分金币
-// @Tags NFT
-// @Accept json
-// @Produce json
-// @Param data body hashID true "卡牌哈希ID"
-// @Success 200 {object} utils.APIResponse[string] "摧毁成功"
-// @Failure 400 {object} utils.APIResponse[string] "请求参数错误或卡牌在市场中"
-// @Failure 500 {object} utils.APIResponse[string] "服务器内部错误"
-// @Security ApiKeyAuth
-// @Router /api/auth/card/destroy [post]
 func Destroy(c *gin.Context) {
 	var ihash hashID
 	if err := c.ShouldBindJSON(&ihash); err != nil {

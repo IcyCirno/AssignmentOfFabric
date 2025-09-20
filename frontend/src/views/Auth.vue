@@ -68,7 +68,7 @@ export default {
       try {
         await register(this.registerForm.name, this.registerForm.password);
         this.$root.showAlert("success", "注册成功，请登录");
-        this.isRegister = false; // 翻回登录
+        window.location.href = 'auth';
       } catch (err) {
         this.$root.showAlert("danger", "注册失败：" + err.message);
       }
@@ -278,4 +278,24 @@ export default {
   color: var(--font-color);
   cursor: pointer;
 } 
+
+body, html {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  background: #000; /* 外部黑边 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-wrapper {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  max-height: 100%;
+  background: #fff; /* 你的网页内容区域 */
+  overflow: hidden;
+}
+
+
 </style>

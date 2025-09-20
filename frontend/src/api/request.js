@@ -63,9 +63,9 @@ export const sellCard = async (hashid, cost) => {
 };
 
 // 下架卡牌
-export const cancelCard = async (hashid) => {
+export const cancelCard = async (orderid) => {
   return request("/auth/card/cancel", {
     method: "POST",
-    body: JSON.stringify({ hashid }),
+    body: JSON.stringify({ orderid }),
   });
 };

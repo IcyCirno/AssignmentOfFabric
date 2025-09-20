@@ -16,7 +16,18 @@ export default {
   methods: {
     showAlert(type, message) {
       this.$refs.alertComponent.createAlert(type, message);
+    },
+    showAlert(type, message) {
+      this.$refs.alertComponent.createAlert(type, message);
     }
+  },
+  // provide 必须返回一个对象；将 showAlert 绑定到 this，避免调用时 this 丢失
+  provide() {
+      console.log("App provide 注册 showAlert");
+
+    return {
+      showAlert: (type, message) => this.showAlert(type, message)
+    };
   }
 }
 

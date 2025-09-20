@@ -19,23 +19,28 @@
     </form>
 
     <!--overly-->
-    <div v-if="showScratch || showModal" class="overlay">
+    <div v-if="showScratch || showCardModal" class="overlay">
     <!--  新增：刮刮乐 -->
       <ScratchCard
         v-if="showScratch"
-        :width="300"
-        :height="400"
-        @complete="() => { showScratch = false; showModal = true }"
+        :width="450"
+        :height="660"
+        @complete="() => { showScratch = false; showCardModal = true }"
       >
         <!-- 刮开后显示卡牌立绘 -->
         <img 
           :src="newCard.avatar" 
           alt="new card" 
-          style="width:100%;height:100%;object-fit:cover;border-radius:8px;" 
+          class="scratch-card-img" 
         />
       </ScratchCard>
       <!-- 调用封装的卡牌弹窗 --> 
-      <CardModal :visible="showModal" :card="newCard" @close="showModal = false" />
+      <CardModal
+      v-model="showCardModal"
+      :card="newCard"
+      :showActions="true"
+      @close="closeCardModal"
+    />
     </div>
   </div>
 </template>
@@ -54,7 +59,7 @@ export default {
       balance: 0,
       form: { name: "", profile: "", avatar: "" },
       newCard: {},
-      showModal: false,
+      showCardModal: false,
       showScratch: false 
     }
   },
@@ -228,6 +233,11 @@ h2 {
   align-items: center;
   z-index: 2000;
 }
-
+.scratch-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px; /* 和 cont_photo 保持一致 */
+}
 
 </style>

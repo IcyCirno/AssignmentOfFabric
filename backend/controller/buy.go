@@ -9,25 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// BuyRequest 购买卡牌请求参数
-// swagger:model BuyRequest
 type buy struct {
-	// 交易订单ID
 	OrderID string `json:"orderid" binding:"required"`
 }
 
-// Buy godoc
-// @Summary 购买卡牌
-// @Description 用户购买市场上的卡牌交易订单，完成金币扣除和卡牌转移
-// @Tags NFT
-// @Accept json
-// @Produce json
-// @Param data body buy true "交易订单ID"
-// @Success 200 {object} utils.APIResponse[model.CardAndTrans] "交易成功"
-// @Failure 400 {object} utils.APIResponse[string] "请求参数错误或资金不足"
-// @Failure 500 {object} utils.APIResponse[string] "服务器内部错误或更新失败"
-// @Security ApiKeyAuth
-// @Router /api/auth/market/buy [post]
 func Buy(c *gin.Context) {
 	var iBuy buy
 	if err := c.ShouldBindJSON(&iBuy); err != nil {

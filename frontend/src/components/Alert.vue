@@ -158,11 +158,16 @@ $text: #677b7a;
 }
 
 .wrapper {
+  position: fixed;
+  top: 1rem;             /* 离顶部一点点 */
+  left: 50%;
+  transform: translateX(-50%); /* 只水平居中 */
   max-width: 500px;
-  width: 100%;
-  margin: auto;
-  padding-top: 15vh;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  width: 80%; // 适配小屏幕
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
+
 </style>

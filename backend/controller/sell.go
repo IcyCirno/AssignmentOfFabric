@@ -9,27 +9,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// SellRequest 上架卡牌请求参数
-// swagger:model SellRequest
 type sell struct {
-	// 卡牌唯一ID
 	HashID string `json:"hashid" binding:"required"`
-	// 交易价格
-	Cost int `json:"cost" binding:"required"`
+	Cost   int    `json:"cost" binding:"required"`
 }
 
-// Sell godoc
-// @Summary 上架卡牌
-// @Description 用户将自己的卡牌上架市场进行交易
-// @Tags NFT
-// @Accept json
-// @Produce json
-// @Param data body sell true "卡牌上架信息"
-// @Success 200 {object} utils.APIResponse[model.CardAndTrans] "创建交易成功，返回交易信息"
-// @Failure 400 {object} utils.APIResponse[string] "请求参数错误或卡牌在市场中"
-// @Failure 500 {object} utils.APIResponse[string] "服务器内部错误或创建交易失败"
-// @Security ApiKeyAuth
-// @Router /api/auth/card/sell [post]
 func Sell(c *gin.Context) {
 	var isell sell
 	if err := c.ShouldBindJSON(&isell); err != nil {

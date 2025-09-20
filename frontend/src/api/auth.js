@@ -27,5 +27,5 @@ export function getProfile() {
 // 退出登录
 export function logout(router) {
   localStorage.removeItem('token')
-  window.location.href = '/login'
+  window.location.href = '/auth'
 }

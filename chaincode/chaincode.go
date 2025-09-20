@@ -96,6 +96,7 @@ func (m *SmartContract) GetCard(c contractapi.TransactionContextInterface, hash_
 	}
 	return string(data), err
 }
+
 func (m *SmartContract) GetTransaction(c contractapi.TransactionContextInterface, trans_id string) (string, error) {
 	data, err := c.GetStub().GetState(trans_id)
 	if err != nil || data == nil {

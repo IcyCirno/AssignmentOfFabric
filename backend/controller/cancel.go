@@ -9,25 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// CancelRequest 取消交易请求参数
-// swagger:model CancelRequest
 type cancel struct {
-	// 交易订单ID
 	OrderID string `json:"orderid" binding:"required"`
 }
 
-// Cancel godoc
-// @Summary 取消交易
-// @Description 用户取消自己发起的卡牌交易订单
-// @Tags NFT
-// @Accept json
-// @Produce json
-// @Param data body cancel true "交易订单ID"
-// @Success 200 {object} utils.APIResponse[model.CardAndTrans] "取消成功"
-// @Failure 400 {object} utils.APIResponse[string] "请求参数错误"
-// @Failure 500 {object} utils.APIResponse[string] "服务器内部错误或更新失败"
-// @Security ApiKeyAuth
-// @Router /api/auth/card/cancel [post]
 func Cancel(c *gin.Context) {
 	var icancel cancel
 	if err := c.ShouldBind(&icancel); err != nil {

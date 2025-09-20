@@ -8,16 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Query godoc
-// @Summary 查询用户卡牌
-// @Description 查询当前登录用户所拥有的所有卡牌信息
-// @Tags NFT
-// @Accept json
-// @Produce json
-// @Success 200 {object} utils.APIResponse[[]dto.Card] "查询成功，返回用户卡牌列表"
-// @Failure 500 {object} utils.APIResponse[string] "服务器内部错误或查询失败"
-// @Security ApiKeyAuth
-// @Router /api/auth/card/query [post]
 func Query(c *gin.Context) {
 
 	var cards []dto.Card
